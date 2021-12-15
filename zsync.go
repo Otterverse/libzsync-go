@@ -17,6 +17,7 @@ import (
 	"net/http"
 	"os"
 	"runtime"
+	"strings"
 	"sync"
 
 	"github.com/AppImageCrafters/libzsync-go/chunks"
@@ -33,6 +34,7 @@ type ZSync struct {
 
 	RemoteFileUrl  string
 	RemoteFileSize int64
+	RemoteFileSHA1 string
 }
 
 func NewZSync(zsyncFileUrl string) (*ZSync, error) {
@@ -51,11 +53,18 @@ func NewZSync(zsyncFileUrl string) (*ZSync, error) {
 		return nil, err
 	}
 
+	// Relative URLs
+	if !(strings.HasPrefix(c.URL, "http") || strings.HasPrefix(c.URL, "ftp")) {
+			baseURL := strings.LastIndex(zsyncFileUrl, "/")
+			c.URL = zsyncFileUrl[:baseURL] + "/" + c.URL
+	}
+
 	return &ZSync{
 		BlockSize:      int64(c.BlockSize),
 		ChecksumsIndex: c.ChecksumIndex,
 		RemoteFileUrl:  c.URL,
 		RemoteFileSize: c.FileLength,
+		RemoteFileSHA1: c.SHA1,
 	}, nil
 }
 
@@ -91,7 +100,8 @@ func (zsync *ZSync) Sync(filePath string, output io.WriteSeeker) error {
 
 	missingChunksSource := sources.HttpFileSource{URL: zsync.RemoteFileUrl, Size: zsync.RemoteFileSize}
 	missingChunks := chunkMapper.GetMissingChunks()
-
+	missingChunks = chunkMapper.OptimizeChunks(missingChunks, zsync.BlockSize * 64)
+	
 	for _, chunk := range missingChunks {
 		// fetch whole chunk to reduce the number of request
 		_, err = missingChunksSource.Seek(chunk.SourceOffset, io.SeekStart)

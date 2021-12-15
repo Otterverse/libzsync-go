@@ -1,6 +1,7 @@
 package sources
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"net/http"
@@ -14,17 +15,17 @@ type HttpFileSource struct {
 
 	cacheBegin  int64
 	cacheEnd    int64
-	readerCache io.ReadCloser
+	readerCache bytes.Buffer
+	client      *http.Client
 }
 
 func (h *HttpFileSource) Read(b []byte) (n int, err error) {
-	if h.readerCache != nil &&
+	if h.readerCache.Len() != 0 &&
 		(h.Offset < h.cacheBegin || h.Offset+int64(len(b)) > h.cacheEnd) {
-		_ = h.readerCache.Close()
-		h.readerCache = nil
+		h.readerCache.Reset()
 	}
 
-	if h.readerCache == nil {
+	if h.readerCache.Len() == 0 {
 		err = h.Request(int64(len(b)))
 		if err != nil {
 			return 0, err
@@ -55,27 +56,41 @@ func (h *HttpFileSource) Request(size int64) (err error) {
 	h.cacheBegin = h.Offset
 	h.cacheEnd = h.Offset + size
 
-	h.readerCache, err = h.doRangeRequest(h.cacheBegin, h.cacheEnd)
+	body, err := h.doRangeRequest(h.cacheBegin, h.cacheEnd)
 	if err != nil {
 		return err
 	}
+	defer body.Close()
+
+	n, err := h.readerCache.ReadFrom(body)
+	if err != nil {
+		return err
+	}
+
+	if n != size {
+		return fmt.Errorf("Range size mismatch. Got: %d, expected %d", n, size)
+	}
+
 	return nil
 }
 
 func (h *HttpFileSource) doRangeRequest(range_start int64, range_end int64) (io.ReadCloser, error) {
-	// fmt.Println("Requesting chunk: ", range_start, range_end)
+	fmt.Println("Requesting chunk: ", range_start, range_end, range_end-range_start)
 	rangedRequest, err := http.NewRequest("GET", h.URL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating range request for \"%v\": %v", h.URL, err)
 	}
 
-	rangeSpecifier := fmt.Sprintf("bytes=%v-%v", range_start, range_end)
+	rangeSpecifier := fmt.Sprintf("bytes=%v-%v", range_start, range_end-1)
 	rangedRequest.ProtoAtLeast(1, 1)
 	rangedRequest.Header.Add("Range", rangeSpecifier)
 	rangedRequest.Header.Add("Accept-Encoding", "identity")
 
-	client := &http.Client{}
-	rangedResponse, err := client.Do(rangedRequest)
+	if h.client == nil {
+		h.client = &http.Client{}
+	}
+
+	rangedResponse, err := h.client.Do(rangedRequest)
 	if err != nil {
 		return nil, fmt.Errorf("Error executing request for \"%v\": %v", h.URL, err)
 	}
