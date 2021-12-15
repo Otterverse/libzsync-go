@@ -13,9 +13,9 @@ func TestFileChunksMapper_GetMissingChunks(t *testing.T) {
 	}
 
 	chunkList := []chunks.ChunkInfo{
-		chunks.ChunkInfo{TargetOffset: 2, Size: 2},
-		chunks.ChunkInfo{TargetOffset: 4, Size: 2},
-		chunks.ChunkInfo{TargetOffset: 8, Size: 2},
+		{TargetOffset: 2, Size: 2},
+		{TargetOffset: 4, Size: 2},
+		{TargetOffset: 8, Size: 2},
 	}
 
 	for _, chunk := range chunkList {

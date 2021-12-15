@@ -55,8 +55,8 @@ func NewZSync(zsyncFileUrl string) (*ZSync, error) {
 
 	// Relative URLs
 	if !(strings.HasPrefix(c.URL, "http") || strings.HasPrefix(c.URL, "ftp")) {
-			baseURL := strings.LastIndex(zsyncFileUrl, "/")
-			c.URL = zsyncFileUrl[:baseURL] + "/" + c.URL
+		baseURL := strings.LastIndex(zsyncFileUrl, "/")
+		c.URL = zsyncFileUrl[:baseURL] + "/" + c.URL
 	}
 
 	return &ZSync{
@@ -100,8 +100,8 @@ func (zsync *ZSync) Sync(filePath string, output io.WriteSeeker) error {
 
 	missingChunksSource := sources.HttpFileSource{URL: zsync.RemoteFileUrl, Size: zsync.RemoteFileSize}
 	missingChunks := chunkMapper.GetMissingChunks()
-	missingChunks = chunkMapper.OptimizeChunks(missingChunks, zsync.BlockSize * 64)
-	
+	missingChunks = chunkMapper.OptimizeChunks(missingChunks, zsync.BlockSize*64)
+
 	for _, chunk := range missingChunks {
 		// fetch whole chunk to reduce the number of request
 		_, err = missingChunksSource.Seek(chunk.SourceOffset, io.SeekStart)

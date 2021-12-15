@@ -89,7 +89,7 @@ func (mapper *ChunksMapper) OptimizeChunks(chunkList []chunks.ChunkInfo, minGap 
 			nextChunk := chunkList[n]
 			nextEnd := nextChunk.SourceOffset + nextChunk.Size
 
-			if end + minGap > nextChunk.SourceOffset {
+			if end+minGap > nextChunk.SourceOffset {
 				end = nextEnd
 				chunk.Size = end - chunk.SourceOffset
 				skipList[n] = true
