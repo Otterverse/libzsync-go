@@ -1,7 +1,7 @@
 package chunksmapper
 
 import (
-	"github.com/AppImageCrafters/libzsync-go/chunks"
+	"github.com/Otterverse/libzsync-go/chunks"
 	"sort"
 	//"fmt"
 )

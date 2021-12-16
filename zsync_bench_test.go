@@ -1,9 +1,9 @@
 package zsync
 
 import (
-	"github.com/AppImageCrafters/libzsync-go/chunksmapper"
-	"github.com/AppImageCrafters/libzsync-go/control"
-	"github.com/AppImageCrafters/libzsync-go/sources"
+	"github.com/Otterverse/libzsync-go/chunksmapper"
+	"github.com/Otterverse/libzsync-go/control"
+	"github.com/Otterverse/libzsync-go/sources"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"io/ioutil"

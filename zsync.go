@@ -20,12 +20,12 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/AppImageCrafters/libzsync-go/chunks"
-	"github.com/AppImageCrafters/libzsync-go/chunksmapper"
-	"github.com/AppImageCrafters/libzsync-go/control"
-	"github.com/AppImageCrafters/libzsync-go/hasedbuffer"
-	"github.com/AppImageCrafters/libzsync-go/index"
-	"github.com/AppImageCrafters/libzsync-go/sources"
+	"github.com/Otterverse/libzsync-go/chunks"
+	"github.com/Otterverse/libzsync-go/chunksmapper"
+	"github.com/Otterverse/libzsync-go/control"
+	"github.com/Otterverse/libzsync-go/hasedbuffer"
+	"github.com/Otterverse/libzsync-go/index"
+	"github.com/Otterverse/libzsync-go/sources"
 )
 
 type ZSync struct {

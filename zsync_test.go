@@ -15,8 +15,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/AppImageCrafters/libzsync-go/chunks"
-	"github.com/AppImageCrafters/libzsync-go/control"
+	"github.com/Otterverse/libzsync-go/chunks"
+	"github.com/Otterverse/libzsync-go/control"
 	"github.com/stretchr/testify/assert"
 )
 

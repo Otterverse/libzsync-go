@@ -3,7 +3,7 @@ package hasedbuffer
 import (
 	"bytes"
 	"encoding/hex"
-	"github.com/AppImageCrafters/libzsync-go/rollinghash"
+	"github.com/Otterverse/libzsync-go/rollinghash"
 	"github.com/glycerine/rbuf"
 	"golang.org/x/crypto/md4"
 	"io"

@@ -5,7 +5,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/AppImageCrafters/libzsync-go/chunks"
+	"github.com/Otterverse/libzsync-go/chunks"
 )
 
 var T = []byte{1, 2, 3, 4}
