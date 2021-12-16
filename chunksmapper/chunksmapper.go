@@ -3,6 +3,7 @@ package chunksmapper
 import (
 	"github.com/AppImageCrafters/libzsync-go/chunks"
 	"sort"
+	//"fmt"
 )
 
 type ChunksMapper struct {
@@ -68,4 +69,42 @@ func (mapper *ChunksMapper) GetMissingChunks() []chunks.ChunkInfo {
 
 func (mapper *ChunksMapper) Add(chunk chunks.ChunkInfo) {
 	mapper.chunksMap[chunk.TargetOffset] = chunk
+}
+
+func (mapper *ChunksMapper) OptimizeChunks(chunkList []chunks.ChunkInfo, minGap int64) []chunks.ChunkInfo {
+	//fmt.Println("numChunks in: ", len(chunkList))
+	var chunkListOut []chunks.ChunkInfo
+	skipList := make(map[int]bool)
+	for i := 0; i < len(chunkList); i++ {
+		if skipList[i] {
+			continue
+		}
+		chunk := chunkList[i]
+		end := chunk.SourceOffset + chunk.Size
+
+		for n := i; n < len(chunkList); n++ {
+			if skipList[n] {
+				continue
+			}
+			nextChunk := chunkList[n]
+			nextEnd := nextChunk.SourceOffset + nextChunk.Size
+
+			if end+minGap > nextChunk.SourceOffset {
+				end = nextEnd
+				chunk.Size = end - chunk.SourceOffset
+				skipList[n] = true
+			}
+		}
+		chunkListOut = append(chunkListOut, chunk)
+	}
+	//fmt.Println("numChunks out: ", len(chunkListOut))
+
+	// for _, c := range chunkList {
+	// 	fmt.Println("ChunksIn: ", c.SourceOffset, c.SourceOffset+c.Size, c.Size)
+	// }
+
+	// for _, c := range chunkListOut {
+	// 	fmt.Println("ChunksOut: ", c.SourceOffset, c.SourceOffset+c.Size, c.Size)
+	// }
+	return chunkListOut
 }
