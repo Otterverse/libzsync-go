@@ -75,7 +75,7 @@ func (h *HttpFileSource) Request(size int64) (err error) {
 }
 
 func (h *HttpFileSource) doRangeRequest(range_start int64, range_end int64) (io.ReadCloser, error) {
-	fmt.Println("Requesting chunk: ", range_start, range_end, range_end-range_start)
+	// fmt.Println("Requesting chunk: ", range_start, range_end, range_end-range_start)
 	rangedRequest, err := http.NewRequest("GET", h.URL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating range request for \"%v\": %v", h.URL, err)
