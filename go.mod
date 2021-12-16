@@ -1,9 +1,18 @@
-module github.com/AppImageCrafters/libzsync-go
+module github.com/Otterverse/libzsync-go
 
-go 1.13
+go 1.17
 
 require (
-	golang.org/x/crypto v0.0.0-20200604202706-70a84ac30bf9
 	github.com/glycerine/rbuf v0.0.0-20190314090850-75b78581bebe
 	github.com/stretchr/testify v1.6.1
+	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
+)
+
+require (
+	github.com/davecgh/go-spew v1.1.0 // indirect
+	github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31 // indirect
+	github.com/gopherjs/gopherjs v0.0.0-20211216084454-9ae78a3fa6dd // indirect
+	github.com/jtolds/gls v4.20.0+incompatible // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
 )
