@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/glycerine/rbuf v0.0.0-20190314090850-75b78581bebe
 	github.com/stretchr/testify v1.6.1
-	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
+	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce
 )
 
 require (

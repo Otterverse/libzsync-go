@@ -264,6 +264,11 @@ func (zsync *ZSync) WriteChunk(source io.ReadSeeker, target io.WriteSeeker, chun
 	}
 
 	n, err := io.CopyN(target, source, chunk.Size)
+	// Special case when the checksum buffer (zero-filled) matches at the end of a file
+	if err == io.EOF && n < chunk.Size {
+		zeros := make([]byte, chunk.Size-n)
+		_, err = target.Write(zeros)
+	}
 	if err != nil {
 		return fmt.Errorf("unable to copy bytes: %d %s", n, err.Error())
 	}
